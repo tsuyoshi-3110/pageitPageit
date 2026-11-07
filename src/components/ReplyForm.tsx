@@ -26,7 +26,7 @@ export default function ReplyForm({
   useEffect(() => {
     const fetchMeta = async () => {
       /* siteName */
-      const sSnap = await getDoc(doc(db, "siteSettings", SITE_KEY));
+      const sSnap = await getDoc(doc(db, "sitePublicProfile", SITE_KEY));
       if (sSnap.exists()) {
         setSiteName((sSnap.data() as any).siteName ?? "Anonymous");
       }
