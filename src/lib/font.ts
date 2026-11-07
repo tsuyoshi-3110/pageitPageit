@@ -12,6 +12,7 @@ export const kosugiMaru = Kosugi_Maru({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-kosugi",
 });
 
@@ -19,6 +20,7 @@ export const notoSansJP = Noto_Sans_JP({
   weight: "400", // ✅ Noto Sans JP は variable font ではないため配列不可
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-noto",
 });
 
@@ -26,6 +28,7 @@ export const shipporiMincho = Shippori_Mincho({
   weight: ["400", "700"], // 通常と太字
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-shippori",
 });
 
@@ -33,6 +36,7 @@ export const reggaeOne = Reggae_One({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-reggae",
 });
 
@@ -41,6 +45,7 @@ export const yomogi = Yomogi({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-yomogi",
 });
 
@@ -49,5 +54,6 @@ export const hachiMaruPop = Hachi_Maru_Pop({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-hachimaru",
 });

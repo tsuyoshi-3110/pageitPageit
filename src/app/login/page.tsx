@@ -862,6 +862,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // 画面の準備が終わるまではボタンを押せないようにします
+  const [formReady, setFormReady] = useState(false);
+  useEffect(() => setFormReady(true), []);
 
   // modals
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -996,18 +999,25 @@ export default function LoginPage() {
         console.error(e);
         setError("権限確認中にエラーが発生しました。");
         await signOut(auth);
+      } finally {
+        // 権限確認が終わるまで「ログイン中...」を表示し続けます
+        setLoading(false);
       }
     });
     return () => unsub();
   }, []);
 
   /* ---------------- ログイン/ログアウト ---------------- */
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (loading) return;
     setLoading(true);
     setError("");
     try {
+      // 成功時は権限確認の完了後に、onAuthStateChanged 側で表示を戻します
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
+      setLoading(false);
       if (err instanceof FirebaseError) {
         switch (err.code) {
           case "auth/invalid-email":
@@ -1025,8 +1035,6 @@ export default function LoginPage() {
       } else {
         setError("不明なエラーが発生しました。");
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -1488,6 +1496,7 @@ export default function LoginPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+              <form onSubmit={handleLogin} className="space-y-4">
               <Input
                 type="email"
                 placeholder="メールアドレス"
@@ -1500,6 +1509,7 @@ export default function LoginPage() {
               />
               <div className="flex items-center justify-between text-sm">
                 <button
+                  type="button"
                   onClick={() => {
                     setShowForgotEmail(false);
                     setShowForgotPassword(true);
@@ -1509,6 +1519,7 @@ export default function LoginPage() {
                   パスワードを忘れた方
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setShowForgotPassword(false);
                     setShowForgotEmail(true);
@@ -1519,12 +1530,13 @@ export default function LoginPage() {
                 </button>
               </div>
               <Button
-                onClick={handleLogin}
-                disabled={loading}
+                type="submit"
+                disabled={!formReady || loading}
                 className="w-full bg-blue-500"
               >
-                {loading ? "ログイン中..." : "ログイン"}
+                {!formReady ? "読み込み中..." : loading ? "ログイン中..." : "ログイン"}
               </Button>
+              </form>
             </CardContent>
           </Card>
 
